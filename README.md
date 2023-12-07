@@ -9,67 +9,49 @@
 
 ## Introduction
 
-**mskcc/loki** is a bioinformatics pipeline that ...
+**mskcc/loki** is a bioinformatics pipeline that calculates Copy Number Variation (CNV) mutation data from a Tumor/Normal Bam pair. The pipeline uses MSKCC Facets/Facets-suite and calculates pileups using MKSCC Htstools.
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
+![Loki graph](docs/images/Loki.png)
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
-
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+1. Calculate pileups ([`htstools`](https://github.com/mskcc/htstools/releases/tag/snp_pileup_0.1.1))
+2. Calculate CNV results ([`Facets-suite`](https://github.com/mskcc/facets-suite/releases/tag/2.0.9))
 
 ## Usage
 
-:::note
-If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-with `-profile test` before running the workflow on actual data.
-:::
-
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, prepare a samplesheet with your input data that looks as follows:
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+pairId,tumorBam,normalBam,assay,normalType,bedFile
+pair_sample,/bam/path/foo_tumor.rg.md.abra.printreads.bam,/bam/path/foo_normal.rg.md.abra.printreads.bam,IMPACT505,MATCHED,NONE
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
+> [!IMPORTANT]
+> Make sure the bams have an index file associated with it either file.bam.bai or file.bai should work
 
 Now, you can run the pipeline using:
 
 <!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
-nextflow run mskcc/loki \
-   -profile <docker/singularity/.../institute> \
+nextflow run main.nf \
+   -profile singularity,test_juno \
    --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
 
-:::warning
-Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
-provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
-:::
+> [!WARNING]
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
 ## Credits
 
-mskcc/loki was originally written by Nikhil Kumar.
+mskcc/loki was originally written by Nikhil Kumar [@nikhil](https://github.com/nikhil).
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+<!--We thank the following people for their extensive assistance in the development of this pipeline: -->
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 

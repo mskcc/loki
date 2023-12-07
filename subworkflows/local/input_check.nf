@@ -12,33 +12,68 @@ workflow INPUT_CHECK {
     SAMPLESHEET_CHECK ( samplesheet )
         .csv
         .splitCsv ( header:true, sep:',' )
-        .map { create_fastq_channel(it) }
-        .set { reads }
+        .map { create_bam_channel(it) }
+        .set { bam_files }
+
+    ch_versions = Channel.empty()
+    ch_versions = ch_versions.mix(SAMPLESHEET_CHECK.out.versions)
 
     emit:
-    reads                                     // channel: [ val(meta), [ reads ] ]
-    versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
+    bam_files = bam_files                 // channel: [ val(meta), [ bams ] ]
+    versions = ch_versions               // channel: [ versions.yml ]
 }
 
-// Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
-def create_fastq_channel(LinkedHashMap row) {
+// Function to get list of [ meta, [ tumorBam, normalBam, assay, normalType ] ]
+def create_bam_channel(LinkedHashMap row) {
     // create meta map
     def meta = [:]
-    meta.id         = row.sample
-    meta.single_end = row.single_end.toBoolean()
+    meta.id         = row.pairId
+    meta.assay      = row.assay
+    meta.normalType = row.normalType
 
-    // add path(s) of the fastq file(s) to the meta map
-    def fastq_meta = []
-    if (!file(row.fastq_1).exists()) {
-        exit 1, "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${row.fastq_1}"
+    // add path(s) of the bam files to the meta map
+    def bams = []
+    def bedFile = null
+    if (!file(row.tumorBam).exists()) {
+        exit 1, "ERROR: Please check input samplesheet -> Tumor BAM file does not exist!\n${row.tumorBam}"
     }
-    if (meta.single_end) {
-        fastq_meta = [ meta, [ file(row.fastq_1) ] ]
-    } else {
-        if (!file(row.fastq_2).exists()) {
-            exit 1, "ERROR: Please check input samplesheet -> Read 2 FastQ file does not exist!\n${row.fastq_2}"
+    if (!file(row.normalBam).exists()) {
+        exit 1, "ERROR: Please check input samplesheet -> Normal BAM file does not exist!\n${row.normalBam}"
+    }
+
+    def tumorBai = "${row.tumorBam}.bai"
+    def normalBai = "${row.normalBam}.bai"
+    def tumorBaiAlt = "${row.tumorBam}".replaceAll('bam$', 'bai')
+    def normalBaiAlt = "${row.normalBam}".replaceAll('bam$', 'bai')
+
+    def foundTumorBai = ""
+    def foundNormalBai = ""
+
+
+    if (file(tumorBai).exists()) {
+        foundTumorBai = tumorBai
+    }
+    else{
+        if(file(tumorBaiAlt).exists()){
+            foundTumorBai = tumorBaiAlt
         }
-        fastq_meta = [ meta, [ file(row.fastq_1), file(row.fastq_2) ] ]
+        else{
+        exit 1, "ERROR: Please verify inputs -> Tumor BAI file does not exist!\n${row.tumorBam}"
+        }
     }
-    return fastq_meta
+    if (file(normalBai).exists()) {
+        foundNormalBai = normalBai
+    }
+    else{
+        if(file(normalBaiAlt).exists()){
+            foundNormalBai = normalBaiAlt
+        }
+        else{
+            exit 1, "ERROR: Please verify inputs -> Normal BAI file does not exist!\n${row.normalBam}"
+        }
+    }
+
+
+    bams = [ meta, [ file(row.tumorBam), file(row.normalBam) ], [ file(foundTumorBai), file(foundNormalBai) ]]
+    return bams
 }

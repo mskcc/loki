@@ -7,22 +7,39 @@
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
+            "pairId": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
+                "errorMessage": "Pair id must be provided and cannot contain spaces"
             },
-            "fastq_1": {
+            "tumorBam": {
                 "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "format": "file-path",
+                "pattern": "^\\S+\\.bam$",
+                "errorMessage": "Tumor bam file must be provided, cannot contain spaces and must have extension '.bam'"
             },
-            "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+            "normalBam": {
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.bam$",
+                "errorMessage": "Normal bam file must be provided, cannot contain spaces and must have extension '.bam'"
+            },
+            "assay": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Assay must be provided and cannot contain spaces"
+            },
+            "normalType": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "NormalType must be provided and cannot contain spaces"
+            },
+            "bedFile": {
+                "errorMessage": "Bed file to specify genomic regions",
                 "anyOf": [
                     {
                         "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                        "pattern": "^\\S+\\.bed$"
                     },
                     {
                         "type": "string",
@@ -31,6 +48,12 @@
                 ]
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": [
+            "pairId",
+            "tumorBam",
+            "normalBam",
+            "assay",
+            "normalType"
+        ]
     }
 }
