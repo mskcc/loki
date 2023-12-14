@@ -24,15 +24,19 @@ workflow CNV {
     emit:
     pileup      = SNPPILEUP.out.pileup                    // channel: [ val(meta), [ pileup ] ]
     purity_seg = FACETS.out.purity_seg                    // channel: [ val(meta), [ purity_seg ]]
+    purity_rdata = FACETS.out.purity_rdata                // channel: [ val(meta), [ purity_rdata ]]
+    purity_png = FACETS.out.purity_png                    // channel: [ val(meta), [ purity_png ]]
+    purity_out = FACETS.out.purity_out                    // channel: [ val(meta), [ purity_out ]]
+    purity_cncf_txt = FACETS.out.purity_cncf_txt          // channel: [ val(meta), [ purity_cncf_txt ]]
     hisens_seg = FACETS.out.hisens_seg                    // channel: [ val(meta), [ hisens_seg ]]
+    hisens_rdata = FACETS.out.hisens_rdata                // channel: [ val(meta), [ hisens_rdata ]]
+    hisens_png = FACETS.out.hisens_png                    // channel: [ val(meta), [ hisens_png ]]
+    hisens_out = FACETS.out.hisens_out                    // channel: [ val(meta), [ hisens_out ]]
+    hisens_cncf_txt = FACETS.out.hisens_cncf_txt          // channel: [ val(meta), [ hisens_cncf_txt ]]
     qc_txt = FACETS.out.qc_txt                            // channel: [ val(meta), [ qc_txt ]]
     gene_level_txt = FACETS.out.gene_level_txt            // channel: [ val(meta), [ gene_level_txt ]]
     arm_level_txt = FACETS.out.arm_level_txt              // channel: [ val(meta), [ arm_level_txt ]]
     output_txt = FACETS.out.output_txt                    // channel: [ val(meta), [ output_txt ]]
-    purity_rds = FACETS.out.purity_rds                    // channel: [ val(meta), [ purity_rds ]]
-    purity_png = FACETS.out.purity_png                    // channel: [ val(meta), [ purity_png ]]
-    hisens_rds = FACETS.out.hisens_rds                    // channel: [ val(meta), [ hisens_rds ]]
-    hisens_png = FACETS.out.hisens_png                    // channel: [ val(meta), [ hisens_png ]]
     versions = ch_versions                                // channel: [ versions.yml ]
 }
 
