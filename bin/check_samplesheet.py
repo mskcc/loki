@@ -76,6 +76,11 @@ class RowChecker:
         if len(row[self._pairId]) <= 0:
             raise AssertionError("pairId is required.")
 
+    def _validate_pairId_format(self, row):
+        id_value = row[self._pairId]
+        if "." in id_value:
+            raise AssertionError("pairId:{} cannot contain any periods ('.') ".format(id_value))
+
     def _validate_bams(self, row):
         """Assert that the first FASTQ entry is non-empty and has the right format."""
         if len(row[self._tumorBam]) <= 0  or len(row[self._normalBam]) <= 0:
