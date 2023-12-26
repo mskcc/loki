@@ -6,6 +6,9 @@ process FACETS {
         'docker://mskcc/facets-suite:2.0.9':
         'docker.io/mskcc/facets-suite:2.0.9' }"
 
+    publishDir "${params.outdir}/${meta.id}/", pattern: "${meta.id}_*", saveAs: { filename -> filename.replaceFirst("${meta.id}_", "${meta.id}.") }, mode: params.publish_dir_mode
+    publishDir "${params.outdir}/${meta.id}/", pattern: "${meta.id}.*", mode: params.publish_dir_mode
+
     input:
 
     tuple val(meta), path(snp_pileup)  //  [ meta (id, assay, normalType), ${prefix}.snp_pileup.gz]
@@ -15,12 +18,12 @@ process FACETS {
     tuple val(meta), path("*_purity.Rdata")          , emit: purity_rdata
     tuple val(meta), path("*_purity.CNCF.png")       , emit: purity_png
     tuple val(meta), path("*_purity.out")            , emit: purity_out
-    tuple val(meta), path("*_purity.CNCF.txt")       , emit: purity_cncf_txt
+    tuple val(meta), path("*_purity.cncf.txt")       , emit: purity_cncf_txt
     tuple val(meta), path("*_hisens.seg")            , emit: hisens_seg
     tuple val(meta), path("*_hisens.Rdata")          , emit: hisens_rdata
     tuple val(meta), path("*_hisens.CNCF.png")       , emit: hisens_png
     tuple val(meta), path("*_hisens.out")            , emit: hisens_out
-    tuple val(meta), path("*_hisens.CNCF.txt")       , emit: hisens_cncf_txt
+    tuple val(meta), path("*_hisens.cncf.txt")       , emit: hisens_cncf_txt
     tuple val(meta), path("*.qc.txt")                , emit: qc_txt
     tuple val(meta), path("*.gene_level.txt")        , emit: gene_level_txt
     tuple val(meta), path("*.arm_level.txt")         , emit: arm_level_txt
