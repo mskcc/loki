@@ -1,5 +1,5 @@
-include { SNPPILEUP } from '../../modules/local/snppileup'
-include { FACETS } from '../../modules/local/facets'
+include { SNPPILEUP } from '../../modules/msk/snppileup/main'
+include { FACETS } from '../../modules/msk/facets/main'
 
 workflow CNV {
 
@@ -9,14 +9,20 @@ workflow CNV {
     main:
 
     ch_versions = Channel.empty()
+    ch_dbsnp = Channel.value([ "dbsnp", file(params.dbsnp), file(params.dbsnp_index) ])
 
     SNPPILEUP(
-        ch_bams
+        ch_bams,
+        ch_dbsnp
     )
     ch_versions = ch_versions.mix(SNPPILEUP.out.versions)
 
+    ch_facets_input = SNPPILEUP.out.pileup.map {
+        new Tuple(it[0],it[1],true)
+    }
+
     FACETS(
-        SNPPILEUP.out.pileup
+        ch_facets_input
     )
     ch_versions = ch_versions.mix(FACETS.out.versions)
 
@@ -24,12 +30,12 @@ workflow CNV {
     emit:
     pileup      = SNPPILEUP.out.pileup                    // channel: [ val(meta), [ pileup ] ]
     purity_seg = FACETS.out.purity_seg                    // channel: [ val(meta), [ purity_seg ]]
-    purity_rdata = FACETS.out.purity_rdata                // channel: [ val(meta), [ purity_rdata ]]
+    purity_rdata = FACETS.out.purity_r_data               // channel: [ val(meta), [ purity_r_data ]]
     purity_png = FACETS.out.purity_png                    // channel: [ val(meta), [ purity_png ]]
     purity_out = FACETS.out.purity_out                    // channel: [ val(meta), [ purity_out ]]
     purity_cncf_txt = FACETS.out.purity_cncf_txt          // channel: [ val(meta), [ purity_cncf_txt ]]
     hisens_seg = FACETS.out.hisens_seg                    // channel: [ val(meta), [ hisens_seg ]]
-    hisens_rdata = FACETS.out.hisens_rdata                // channel: [ val(meta), [ hisens_rdata ]]
+    hisens_rdata = FACETS.out.hisens_r_data               // channel: [ val(meta), [ hisens_r_data ]]
     hisens_png = FACETS.out.hisens_png                    // channel: [ val(meta), [ hisens_png ]]
     hisens_out = FACETS.out.hisens_out                    // channel: [ val(meta), [ hisens_out ]]
     hisens_cncf_txt = FACETS.out.hisens_cncf_txt          // channel: [ val(meta), [ hisens_cncf_txt ]]
