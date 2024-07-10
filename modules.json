@@ -2,23 +2,49 @@
     "name": "mskcc/loki",
     "homePage": "https://github.com/mskcc/loki",
     "repos": {
+        "https://github.com/mskcc-omics-workflows/modules.git": {
+            "modules": {
+                "msk": {
+                    "facets": {
+                        "branch": "main",
+                        "git_sha": "d1ce3e6d81b3ee2db8f04e6b9e7015c204cc6492",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "snppileup": {
+                        "branch": "main",
+                        "git_sha": "4a591182dee88e8ec547b3b8d9bf004937b0a809",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    }
+                }
+            }
+        },
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "bd8092b67b5103bdd52e300f75889442275c3117",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     }
                 }
             }

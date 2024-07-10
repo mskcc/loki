@@ -8,7 +8,8 @@ process SNPPILEUP {
 
     input:
 
-    tuple val(meta), path(input), path(input_index)    //  [ meta (id, assay, normalType), [ tumorBam, normalBam ], [ tumorBai, normalBai ]]
+    tuple val(meta),  path(normal), path(normal_index), path(tumor),  path(tumor_index), path(additional_bams, arity: '0..*'), path(additional_bam_index, arity: '0..*')
+    tuple val(meta1), path(dbsnp),  path(dbsnp_index)
 
 
     output:
@@ -21,35 +22,38 @@ process SNPPILEUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def extra_bams = additional_bams ?: ''
 
     """
     /usr/bin/snp-pileup \
         ${args} \
+        ${dbsnp} \
         ${prefix}.snp_pileup.gz \
-        ${input[1]} \
-        ${input[0]}
+        ${normal} \
+        ${tumor} \
+        ${extra_bams}
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        htslib: 1.5
+        htslib: \$(bgzip --version | grep -oP '(?<=\\(htslib\\) ).*')
         htstools: 0.1.1
-        r: 3.6.1
+        r: \$(R --version | grep -oP '(?<=R version ).*(?=\\()')
     END_VERSIONS
     """
 
     stub:
-    def args = task.ext.args ?: ''
+    def args =   task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    touch ${prefix}.snp_pileup.gz
-
+    echo "stub test" >> ${prefix}.snp_pileup
+    gzip ${prefix}.snp_pileup
+    
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        facets_suite: 2.0.9-7d54d0f67e3136bd60d94ad810a9c855df113096
-        facets: 0.6.2
-        htslib: 1.18
-        r: 4.3
-        pctGCdata: 0.3.0
+        htslib: \$(bgzip --version | grep -oP '(?<=\\(htslib\\) ).*')
+        htstools: 0.1.1
+        r: \$(R --version | grep -oP '(?<=R version ).*(?=\\()')
     END_VERSIONS
     """
 }
