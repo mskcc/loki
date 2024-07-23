@@ -103,7 +103,7 @@
                 "dbsnp": {
                     "type": "string",
                     "fa_icon": "fas fa-bong",
-                    "pattern": "^\\S+\\.vcf$",
+                    "pattern": "^\\S+\\.vcf.gz$",
                     "format": "file-path",
                     "mimetype": "text/plain",
                     "help_text": "The dbsnp file to used when creating SNP pileups"
