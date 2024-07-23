@@ -74,6 +74,6 @@ def create_bam_channel(LinkedHashMap row) {
     }
 
 
-    bams = [ meta, file(row.normalBam), file(foundNormalBai), file(row.tumorBam), file(foundTumorBai) ]
+    bams = [ meta, file(row.normalBam), file(foundNormalBai), file(row.tumorBam), file(foundTumorBai), [],[] ]
     return bams
 }
