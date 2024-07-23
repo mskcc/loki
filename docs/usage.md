@@ -4,7 +4,19 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+This documentation will walk you through running the nextflow pipeline.
+
+## Running @ MSKCC
+
+If you are runnning this pipeline on a MSKCC cluster you need to make sure nextflow is properly configured for the HPC envirornment:
+
+```bash
+module load java/jdk-17.0.8
+module load singularity/3.7.1
+export PATH=$PATH:/path/to/nextflow/binary
+export SINGULARITY_TMPDIR=/path/to/network/storage/for/singularity/tmp/files
+export NXF_SINGULARITY_CACHEDIR=/path/to/network/storage/for/singularity/cache
+```
 
 ## Samplesheet input
 
@@ -18,7 +30,7 @@ You will need to create a samplesheet with information about the samples you wou
 
 This is an example samplesheet you need to run the pipeline. Note that the bed file is optional and can be empty
 
-```console
+```csv
 pairId,tumorBam,normalBam,assay,normalType,bedFile
 pair_1,/path/to/tumor.bam,/path/to/normal.bam,IMPACT505,MATCHED,None
 pair_2,/path/to/tumor.bam,/path/to/normal.bam,IMPACT505,MATCHED,null
