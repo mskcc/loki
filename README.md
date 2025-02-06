@@ -26,8 +26,9 @@
 If you are runnning this pipeline on a MSKCC cluster you need to make sure nextflow is properly configured for the HPC envirornment:
 
 ```bash
-module load java/jdk-17.0.8
-module load singularity/3.7.1
+module load migration-testing/java/17.0.10
+module load migration-testing/singularity/3.7.1
+module load migration-testing/nextflow/24.04.4
 export PATH=$PATH:/path/to/nextflow/binary
 export SINGULARITY_TMPDIR=/path/to/network/storage/for/singularity/tmp/files
 export NXF_SINGULARITY_CACHEDIR=/path/to/network/storage/for/singularity/cache
@@ -53,7 +54,7 @@ Now, you can run the pipeline using:
 
 ```bash
 nextflow run main.nf \
-   -profile singularity,test_juno \
+   -profile singularity,test_iris \
    --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
